@@ -26,7 +26,17 @@
 <h3>Subir archivo</h3>
 <form action="/upload" method="post" enctype="multipart/form-data">
   <input type="file" name="user-file">
-  <!--<input type="submit" name="submit">-->
+  <button>Submit</button>
+</form>
+
+<h3>Descargar archivo</h3>
+<form action="/download" method="get" enctype="multipart/form-data">
+  <input type="text" name="fileKey">
+  <button>Submit</button>
+</form>
+
+<h3>Obtener objetos de archivo</h3>
+<form action="/objects" method="get">
   <button>Submit</button>
 </form>
 
