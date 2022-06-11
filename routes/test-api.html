@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<h3>Registro</h3>
+<input type="email" name="text" placeholder="email" id="1">
+<input type="password" name="password" placeholder="password" id="2">
+<button id="registro">Registro</button>
+
+<h3>Login</h3>
+<input type="email" name="text" placeholder="email" id="3">
+<input type="password" name="password" placeholder="password" id="4">
+<button id="login">Login</button>
+
+<h3>Olvide mi contraseña</h3>
+<input type="email" name="email" placeholder="Introduce tu correo" id="5">
+<button id="forgot-password">Enviar</button>
+
+<h3>Restablecer contraseña</h3>
+<input type="text" name="email" placeholder="email" id="6">
+<input type="password" name="password" placeholder="contraseña" id="7">
+<button id="restore-password">Enviar</button>
+
+<script type="text/javascript">
+  //funcion que se encarga de enviar peticiones fetch y recibir respuestas dada una url, metodo y objeto de datos
+  async function test(url, method_, data){
+    const request=await fetch(url, {method: method_, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+    const response=await request.json();
+    return response.message;
+  }
+</script>
+
+<script type="text/javascript">
+  //registro
+  const registro=document.getElementById('registro');
+  registro.addEventListener('click', async () => {
+    const data1={
+      email: document.getElementById('1').value,
+      password: document.getElementById('2').value
+    };
+    try{
+      const result=await test('/signin', 'post', data1);
+      console.log(result);
+    }
+    catch(err){
+      console.log(err);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  //inicio de sesion
+  const login=document.getElementById('login');
+  login.addEventListener('click', async () => {
+    const data2={
+      email: document.getElementById('3').value,
+      password: document.getElementById('4').value
+    };
+    try{
+      const result=await test('/login', 'post', data2);
+      console.log(result);
+    }
+    catch(err){
+      console.log(err);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  //Olvide mi contraseña
+  const forgotPassword=document.getElementById('forgot-password');
+  forgotPassword.addEventListener('click', async () => {
+    const data3={
+      email: document.getElementById('5').value
+    };
+    try{
+      const result=await test('/forgotten-password', 'put', data3);
+      console.log(result);
+    }
+    catch(err){
+      console.log(err);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  //Restablecer contraseña
+  const restorePassword=document.getElementById('restore-password');
+  restorePassword.addEventListener('click', async () => {
+    const data4={
+      email: document.getElementById('6').value,
+      password: document.getElementById('7').value
+    };
+    try{
+      const result=await test('/restore-password', 'put', data4);
+      console.log(result);
+    }
+    catch(err){
+      console.log(err);
+    }
+  });
+</script>
+
+</body>
+</html>
