@@ -23,6 +23,13 @@
 <input type="password" name="password" placeholder="contraseña" id="7">
 <button id="restore-password">Enviar</button>
 
+<h3>Subir archivo</h3>
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <input type="file" name="user-file">
+  <!--<input type="submit" name="submit">-->
+  <button>Submit</button>
+</form>
+
 <script type="text/javascript">
   //funcion que se encarga de enviar peticiones fetch y recibir respuestas dada una url, metodo y objeto de datos
   async function test(url, method_, data){

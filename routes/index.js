@@ -1,6 +1,6 @@
 /*Esta sera la ruta destinada al registro, inicio de sesion (login) y autenticacion de usuarios.
 A su vez, tambien tendra la ruta destinada a la funcionalidad de restablecimiento de contraseñas*/
-require('dotenv').config(); //Para el correo electronico de envio
+require('dotenv').config();
 const router=require('express').Router();
 const path=require('path');
 const users=require('../src/users.js');
@@ -132,7 +132,6 @@ router.put('/restore-password', async (req, res) => {
             }
           });
           //el resultado de esa consula es [1] si fue exitosa (el correo existe), [0] en caso contrario
-          console.log(result);
           if (result[0]){
             res.json({message: 'Tu contraseña ha sido cambiada!'});
           } else{
