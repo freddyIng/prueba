@@ -4,6 +4,8 @@ const router=require('express').Router();
 const { S3Client, GetObjectCommand, ListObjectsCommand}=require('@aws-sdk/client-s3');
 const multer=require('multer');
 const multerS3=require('multer-s3');
+const { Upload }=require('@aws-sdk/lib-storage');
+const got=require('got');
 const s3=new S3Client({
   region: process.env.AWS_S3_REGION,
   credentials: {
@@ -21,7 +23,7 @@ const upload=multer({
   	  cb(null, Object.assign({}, req.body))
   	},
   	key: function(req, file, cb){
-  	  cb(null,'usuario-'+file.originalname) //Date.now().toString()
+  	  cb(null,'usuario-'+Date.now().toString()) //file.originalname
   	}
   })
 });
@@ -48,6 +50,36 @@ router.get('/objects', async (req, res) => {
   let command=new ListObjectsCommand(options);
   let result=await s3.send(command);
   console.log(result);
+});
+
+router.post('/upload:api', async (req, res) => {
+    try{
+    const response=got.stream(req.body.api);
+    const upload=new Upload({
+      client: s3,
+      params: {
+      	ACL: 'public-read',
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: `usuario-${Date.now().toString()}`,
+        Body: response
+      }
+    });
+    let result=await upload.done();
+    console.log('hecho');
+    console.log(result);
+    res.json({message: 'OK'});
+  } catch(err){
+    console.log(err);
+    res.json({message: 'Error'});
+  }
+});
+
+router.get('/link-file', async (req, res) => {
+  
+});
+
+router.put('/change:file-name', async (req, res) => {
+  
 });
 
 

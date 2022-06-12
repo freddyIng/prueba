@@ -35,6 +35,10 @@
   <button>Submit</button>
 </form>
 
+<h3>Subir archivo desde api</h3>
+<input type="text" id="api">
+<button id="upload-api">Submit</button>
+
 <h3>Obtener objetos de archivo</h3>
 <form action="/objects" method="get">
   <button>Submit</button>
@@ -116,6 +120,22 @@
     }
     catch(err){
       console.log(err);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  //Subir imagen desde api
+  const uploadApi=document.getElementById('upload-api');
+  uploadApi.addEventListener('click', async () => {
+    const data5={
+      api: document.getElementById('api').value
+    };
+    try{
+      const result=await test('/upload:api', 'post', data5);
+      console.log(result);
+    } catch(err){
+      console.log(err)
     }
   });
 </script>
