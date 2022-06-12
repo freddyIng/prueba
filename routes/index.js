@@ -9,6 +9,49 @@ const saltRounds=10;
 const nodemailer=require('nodemailer'); //Para el restablecimiento de contraseñas
 const randomstring=require('randomstring'); //Para la generacion aleatoria de contraseñas nuevas para el usuario
 
+const session=require('express-session');
+const passport=require('passport');
+const LocalStrategy=require('passport-local').Strategy;
+
+//Uso del modulo passport para iniciar sesion. El username en este caso es el correo
+passport.use(new LocalStrategy(async function verify(username, password, cb){
+  try{
+    const data=await users.findAll({
+      where: {
+      	email: username
+      }
+    });
+    if (data.length===1){
+      bcrypt.compare(password, data[0].password, (err, result) => {
+        if (err) return cb(err);
+        if (result){
+          return cb(null, data[0].dataValues);
+        } else{
+          return cb(null, false, {message: 'El email o contraseña son incorrectos'});
+        }
+      });
+    } else{
+      return cb(null, false, {message: 'El email o contraseña son incorrectos'});
+    }
+  } catch(error){
+  	console.log(error);
+    res.json({message: 'Error'});
+  }
+}));
+
+//Codigo para serializar al usuario, sirve para mantener la sesion.
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.email });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
+
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/test-api.html'));
 });
@@ -23,7 +66,7 @@ router.post('/signin', async (req, res) => {
           email: req.body.email,
           password: hash
         });
-        res.json({message: 'The has registrado con exito! Ahora puedes iniciar sesion para empezar a usar nuestro servicio.'});
+        res.json({message: 'Te has registrado con exito! Ahora puedes iniciar sesion para empezar a usar nuestro servicio.'});
       } catch(error){
         res.send({message: 'Ha ocurrido un error. Intentelo de nuevo!'});
       }
@@ -31,30 +74,16 @@ router.post('/signin', async (req, res) => {
   }); 
 });
 
-//Sin passport, solo para testear el bcrypt
-router.post('/login', async(req, res) => {
-  try{
-    const result=await users.findAll({
-      where: {
-      	email: req.body.email
-      }
-    });
-    if (result.length===1){
-      bcrypt.compare(req.body.password, result[0].password, (err, result) => {
-        if (err) return res.json({message: 'Error al iniciar sesion'});
-        if (result){
-          res.json({message: 'OK'});
-        } else{
-          res.json({message: 'El email o contraseña son incorrectos'});
-        }
-      });
-    } else{
-      res.json({message: 'El email o contraseña son incorrectos'});
-    }
-  } catch(error){
-    res.json({message: 'Error'});
-  }
+router.post('/login', passport.authenticate('local', {failureRedirect: '/login:failure', failureMessage: true}), (req, res)=>{
+  console.log(req.user);
+  res.json({message: 'Ok'});
+})
+
+
+router.get('/login:failure', (req, res) => {
+  res.json({message: 'Fallo al iniciar sesion'});
 });
+
 
 router.put('/forgotten-password', async (req, res) => {
   try{

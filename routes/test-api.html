@@ -9,10 +9,16 @@
 <input type="password" name="password" placeholder="password" id="2">
 <button id="registro">Registro</button>
 
-<h3>Login</h3>
-<input type="email" name="text" placeholder="email" id="3">
+<!--<h3>Login</h3>
+<input type="email" name="username" placeholder="email" id="3">
 <input type="password" name="password" placeholder="password" id="4">
-<button id="login">Login</button>
+<button id="login">Login</button>-->
+
+<form action="/login" method="post">
+  <input type="email" name="username">
+  <input type="password" name="password">
+  <button></button>
+</form>
 
 <h3>Olvide mi contraseña</h3>
 <input type="email" name="email" placeholder="Introduce tu correo" id="5">
@@ -39,10 +45,10 @@
 <input type="text" id="api">
 <button id="upload-api">Submit</button>
 
-<h3>Obtener objetos de archivo</h3>
+<!--<h3>Obtener objetos de archivo</h3>
 <form action="/objects" method="get">
   <button>Submit</button>
-</form>
+</form>-->
 
 <script type="text/javascript">
   //funcion que se encarga de enviar peticiones fetch y recibir respuestas dada una url, metodo y objeto de datos
@@ -79,11 +85,11 @@
       email: document.getElementById('3').value,
       password: document.getElementById('4').value
     };
+    console.log(data2);
     try{
       const result=await test('/login', 'post', data2);
       console.log(result);
-    }
-    catch(err){
+    } catch(err){
       console.log(err);
     }
   });

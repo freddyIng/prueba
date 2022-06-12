@@ -11,12 +11,14 @@ sequelize=new Sequelize(process.env.DB_DATABASE, process.env.DB_user, process.en
 const {DataTypes, Model}=require('sequelize');
 const path=require('path')
 const users=require(path.join(__dirname, '/src/users.js'));
+const files=require(path.join(__dirname, '/src/files.js'));
 
 (async ()=>{
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
     await users.sync();
+    await files.sync();
     console.log('Tablas creadas!');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
