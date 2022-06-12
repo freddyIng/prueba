@@ -75,7 +75,6 @@ router.post('/signin', async (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {failureRedirect: '/login:failure', failureMessage: true}), (req, res)=>{
-  console.log(req.user);
   res.json({message: 'Ok'});
 })
 

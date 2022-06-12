@@ -28,7 +28,7 @@ const upload=multer({
   storage: multerS3({
   	s3: s3,
   	bucket: process.env.AWS_S3_BUCKET,
-  	acl: 'public-read',
+  	acl: 'public-read-write',
   	metadata: function(req, file, cb){
   	  cb(null, Object.assign({}, req.body))
   	},
@@ -82,35 +82,34 @@ router.get('/download', authenticated, async (req, res) => {
 });
 
 router.put('/rename:file', authenticated, async (req, res) => {
-  //Copio y renombro el archivo, para luego eliminar el archivo original
   try{
   	const oldKey=req.body.oldKey;
   	const newKey=req.body.newKey;
     const inputCopy={
-      ACL: 'public-read',
+      ACL: 'public-read-write',
       Bucket: process.env.AWS_S3_BUCKET,
-      CopySource: `${process.env.AWS_S3_BUCKET}/${oldKey}`,
+      CopySource: `${process.env.AWS_S3_BUCKET}/${req.user.id.toString()}/${oldKey}`,
       Key: `${req.user.id.toString()}/${req.body.newKey}`
     };
     const copyCommand=new CopyObjectCommand(inputCopy);
     const copyResponse=await s3.send(copyCommand);
-    console.log(copyResponse);
-    await files.update({key: `${req.user.id.toString()}/${newKey}`}, {
+    /*Hago una consulta para obtener el link(location) del archivo para poder actualizar el mismo dato con el nuevo key del archivo.
+    Esto debido a que el resultado del comando copy no contiene el nuevo link*/
+    let fileLocation=await files.findAll({
+      attributes: ['location'],
       where: {
         key: `${req.user.id.toString()}/${oldKey}`
       }
     });
-    const inputDelete={
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: oldKey
-    };
-    const deleteCommand=new DeleteObjectCommand(inputDelete);
-    const deleteResponse=await s3.send(deleteCommand);
-    console.log(deleteResponse);
+    const newFileLocation=fileLocation[0].location.replace(oldKey, newKey);
+    await files.update({key: `${req.user.id.toString()}/${newKey}`, location: newFileLocation}, {
+      where: {
+        key: `${req.user.id.toString()}/${oldKey}`
+      }
+    });
     res.json({message: 'OK'});
   } catch(err){
     res.json({message: 'error'});
-    console.log(err);
   }
 });
 
@@ -121,7 +120,7 @@ router.post('/upload:api', authenticated, async (req, res) => {
     const upload=new Upload({
       client: s3,
       params: {
-      	ACL: 'public-read',
+      	ACL: 'public-read-write',
         Bucket: process.env.AWS_S3_BUCKET,
         Key: `${req.user.id.toString()}/${Date.now().toString()}`,
         Body: response

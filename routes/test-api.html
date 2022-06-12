@@ -51,6 +51,12 @@
   <button>enviar</button>
 </form>
 
+<h3>Renombrar archivo</h3>
+  <input type="text" id="oldKey" placeholder="Nombre del archivo">
+  <input type="text" id="newKey" placeholder="Nuevo nombre">
+  <button id="rename-file">Send</button>
+
+
 <script type="text/javascript">
   //funcion que se encarga de enviar peticiones fetch y recibir respuestas dada una url, metodo y objeto de datos
   async function test(url, method_, data){
@@ -143,6 +149,23 @@
       console.log(result);
     } catch(err){
       console.log(err)
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  const renameFile=document.getElementById('rename-file');
+  renameFile.addEventListener('click', async () => {
+    const data6={
+      newKey: document.getElementById('newKey').value,
+      oldKey: document.getElementById('oldKey').value
+    };
+    console.log(data6)
+    try{
+      const result=await test('/rename:file', 'put', data6);
+      console.log(result);
+    } catch(err){
+      console.log(err);
     }
   });
 </script>
