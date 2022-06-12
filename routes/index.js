@@ -39,7 +39,7 @@ passport.use(new LocalStrategy(async function verify(username, password, cb){
   }
 }));
 
-//Codigo para serializar al usuario, sirve para mantener la sesion.
+//Codigo para serializar (y deserializar) al usuario, sirve para mantener la sesion.
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
     cb(null, { id: user.id, username: user.email });

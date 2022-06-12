@@ -45,10 +45,11 @@
 <input type="text" id="api">
 <button id="upload-api">Submit</button>
 
-<!--<h3>Obtener objetos de archivo</h3>
-<form action="/objects" method="get">
-  <button>Submit</button>
-</form>-->
+<h3>Buscar imagen desde api externa</h3>
+<form action="/image:search" method="get">
+  <input type="text" name="word">
+  <button>enviar</button>
+</form>
 
 <script type="text/javascript">
   //funcion que se encarga de enviar peticiones fetch y recibir respuestas dada una url, metodo y objeto de datos
