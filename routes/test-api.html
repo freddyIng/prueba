@@ -9,15 +9,11 @@
 <input type="password" name="password" placeholder="password" id="2">
 <button id="registro">Registro</button>
 
-<!--<h3>Login</h3>
-<input type="email" name="username" placeholder="email" id="3">
-<input type="password" name="password" placeholder="password" id="4">
-<button id="login">Login</button>-->
-
+<h3>Login</h3>
 <form action="/login" method="post">
-  <input type="email" name="username">
-  <input type="password" name="password">
-  <button></button>
+  <input type="email" name="username" placeholder="correo electronico">
+  <input type="password" name="password" placeholder="contraseña">
+  <button>Iniciar sesion</button>
 </form>
 
 <h3>Olvide mi contraseña</h3>
@@ -37,17 +33,17 @@
 
 <h3>Descargar archivo</h3>
 <form action="/download" method="get" enctype="multipart/form-data">
-  <input type="text" name="fileKey">
+  <input type="text" name="fileKey" placeholder="Clave del archivo">
   <button>Submit</button>
 </form>
 
 <h3>Subir archivo desde api</h3>
-<input type="text" id="api">
+<input type="text" id="api" placeholder="url de la imagen">
 <button id="upload-api">Submit</button>
 
 <h3>Buscar imagen desde api externa</h3>
 <form action="/image:search" method="get">
-  <input type="text" name="word">
+  <input type="text" name="word" placeholder="palabra clave">
   <button>enviar</button>
 </form>
 
